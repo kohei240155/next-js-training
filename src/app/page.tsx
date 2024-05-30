@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import styles from "./styles/Home.module.css";
+import Title from "./title/page";
 
 export default function Home() {
 
@@ -13,7 +14,7 @@ export default function Home() {
 
   return (
     <>
-      <h1 className={styles.title}>Hello World</h1>
+      <Title />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
