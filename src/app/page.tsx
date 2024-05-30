@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import styles from "./styles/Home.module.css";
 import Title from "./title/page";
+import Link from "next/link";
 
 export default function Home() {
 
@@ -24,6 +25,9 @@ export default function Home() {
           placeholder="名前を入力してください。" />
           <button type="submit">送信</button>
       </form>
+      <Link href="/new-page">
+        新しいページへ
+      </Link>
     </>
   );
 }
