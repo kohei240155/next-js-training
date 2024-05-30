@@ -1,17 +1,28 @@
 "use client"
 
+import { FormEvent, useState } from "react";
 import styles from "./styles/Home.module.css";
 
 export default function Home() {
 
-  const handleClick = () => {
-    alert("ボタンがクリックされました。");
+  const [name, setName] = useState("");
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    alert(`入力された名前: ${name}`);
   };
 
   return (
     <>
       <h1 className={styles.title}>Hello World</h1>
-      <button onClick={handleClick}>Click Me</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={name}
+          className={styles.input}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="名前を入力してください。" />
+          <button type="submit">送信</button>
+      </form>
     </>
   );
 }
