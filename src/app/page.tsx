@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import styles from "./styles/Home.module.css";
 import Title from "./title/page";
 import Link from "next/link";
+import Counter from "./counter/page";
 
 export default function Home() {
 
@@ -28,6 +29,7 @@ export default function Home() {
       <Link href="/new-page">
         新しいページへ
       </Link>
+      <Counter />
     </>
   );
 }
