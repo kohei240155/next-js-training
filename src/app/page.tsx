@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <>
-      <Title />
+      <Title text="Welcome to My App" />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
