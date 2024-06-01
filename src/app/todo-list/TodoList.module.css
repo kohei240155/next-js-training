@@ -1,0 +1,28 @@
+.input {
+    padding: 8px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+}
+
+.button {
+    padding: 8px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.item {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.item:hover {
+    background-color: #f0f0f0;
+}

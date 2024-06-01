@@ -5,13 +5,18 @@ import styles from "./styles/Home.module.css";
 import Title from "./title/page";
 import Link from "next/link";
 import Counter from "./counter/page";
+import TodoList from "./todo-list/page";
 
 export default function Home() {
-
   const [name, setName] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    alert(`入力された名前: ${name}`);
+    if (name) {
+      setIsSubmitted(true);
+      alert(`入力された名前: ${name}`);
+    }
   };
 
   return (
@@ -29,7 +34,8 @@ export default function Home() {
       <Link href="/new-page">
         新しいページへ
       </Link>
-      <Counter />
+      {isSubmitted && <Counter />}
+      <TodoList />
     </>
   );
 }
