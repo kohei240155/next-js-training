@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from './TodoList.module.css';
 
 const TodoList = () => {
@@ -7,15 +7,25 @@ const TodoList = () => {
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
-            setTodos([...todos, newTodo]);
+            const updatedTodos = [...todos, newTodo];
+            setTodos(updatedTodos);
             setNewTodo("");
+            localStorage.setItem("todos", JSON.stringify(updatedTodos));
         }
     };
 
     const handleRemoveTodo = (index: number) => {
         const newTodos = todos.filter((_, i) => i !== index);
         setTodos(newTodos);
+        localStorage.setItem("todos", JSON.stringify(newTodos));
     };
+
+    useEffect(() => {
+        const savedTodos = localStorage.getItem("todos");
+        if (savedTodos) {
+            setTodos(JSON.parse(savedTodos));
+        }
+    }, []);
 
     return (
         <div>
