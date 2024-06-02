@@ -13,7 +13,7 @@ const TodoList = () => {
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
-            const updatedTodos = [...todos, {text: newTodo, completed: "false"}];
+            const updatedTodos = [...todos, {text: newTodo, completed: false}];
             setTodos(updatedTodos);
             setNewTodo("");
             localStorage.setItem("todos", JSON.stringify(updatedTodos));
