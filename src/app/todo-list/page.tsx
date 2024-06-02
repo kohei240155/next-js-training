@@ -1,7 +1,11 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import styles from './TodoList.module.css';
 
 type Todo = {
+    id: string;
     text: string;
     completed: boolean;
 }
@@ -13,22 +17,22 @@ const TodoList = () => {
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
-            const updatedTodos = [...todos, {text: newTodo, completed: false}];
+            const updatedTodos = [...todos, {id: uuidv4() ,text: newTodo, completed: false}];
             setTodos(updatedTodos);
             setNewTodo("");
             localStorage.setItem("todos", JSON.stringify(updatedTodos));
         }
     };
 
-    const handleRemoveTodo = (index: number) => {
-        const newTodos = todos.filter((_, i) => i !== index);
+    const handleRemoveTodo = (id: string) => {
+        const newTodos = todos.filter(todo => todo.id !== id);
         setTodos(newTodos);
         localStorage.setItem("todos", JSON.stringify(newTodos));
     };
 
-    const handleToggleComplete = (index: number) => {
-        const newTodos = todos.map((todo, i) => {
-            if (index === i) {
+    const handleToggleComplete = (id: string) => {
+        const newTodos = todos.map(todo => {
+            if (todo.id === id) {
                 return { ...todo, completed: !todo.completed };
             }
             return todo;
@@ -69,8 +73,8 @@ const TodoList = () => {
                 {filterTodos.map((todo, index) => (
                     <li key={index} className={styles.item}>
                         <span style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.text}</span>
-                        <button onClick={() => handleToggleComplete(index)}>完了</button>
-                        <button onClick={() => handleRemoveTodo(index)}>削除</button>
+                        <button onClick={() => handleToggleComplete(todo.id)}>完了</button>
+                        <button onClick={() => handleRemoveTodo(todo.id)}>削除</button>
                     </li>
                 ))}
             </ul>
