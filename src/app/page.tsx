@@ -35,7 +35,9 @@ export default function Home() {
         新しいページへ
       </Link>
       {isSubmitted && <Counter />}
-      <TodoList />
+      <Link href="/todo-list">
+        Todoリストへ
+      </Link>
     </>
   );
 }
