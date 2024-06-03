@@ -14,6 +14,8 @@ const TodoList = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodo, setNewTodo] = useState("");
     const [filter, setFilter] = useState<"all" | "completed" | "incomplete">("all");
+    const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+    const [editingText, setEditingText] = useState("");
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
@@ -38,6 +40,24 @@ const TodoList = () => {
             return todo;
         });
         setTodos(newTodos);
+        localStorage.setItem("todos", JSON.stringify(newTodos));
+    };
+
+    const handleEditTodo = (id: string, text: string) => {
+        setEditingTodoId(id);
+        setEditingText(text);
+    };
+
+    const handleSaveEdit = (id: string) => {
+        const newTodos = todos.map(todo => {
+            if (todo.id === id) {
+                return {...todo, text: editingText};
+            }
+            return todo;
+        });
+        setTodos(newTodos);
+        setEditingTodoId(null);
+        setEditingText("");
         localStorage.setItem("todos", JSON.stringify(newTodos));
     };
 
@@ -72,9 +92,24 @@ const TodoList = () => {
             <ul className={styles.list}>
                 {filterTodos.map((todo, index) => (
                     <li key={index} className={styles.item}>
-                        <span style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.text}</span>
-                        <button onClick={() => handleToggleComplete(todo.id)}>完了</button>
-                        <button onClick={() => handleRemoveTodo(todo.id)}>削除</button>
+                        { editingTodoId === todo.id ? (
+                            <>
+                                <input
+                                    value={editingText}
+                                    onChange={(e) => setEditingText(e.target.value)}
+                                    type="text"
+                                    className={styles.input} />
+                                <button onClick={() => handleSaveEdit(todo.id)} className={styles.button}>保存</button>
+                            </>
+                        ) : (
+                            <>
+                                <span style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.text}</span>
+                                <button onClick={() => handleToggleComplete(todo.id)}>完了</button>
+                                <button onClick={() => handleRemoveTodo(todo.id)}>削除</button>
+                                <button onClick={() => handleEditTodo(todo.id, todo.text)}>編集</button>
+                            </>
+                        )}
+
                     </li>
                 ))}
             </ul>
