@@ -8,6 +8,7 @@ type Todo = {
     id: string;
     text: string;
     completed: boolean;
+    dueDate: string;
 }
 
 const TodoList = () => {
@@ -16,10 +17,11 @@ const TodoList = () => {
     const [filter, setFilter] = useState<"all" | "completed" | "incomplete">("all");
     const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
     const [editingText, setEditingText] = useState("");
+    const [newTodoDueDate, setNewTodoDueDate] = useState("");
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
-            const updatedTodos = [...todos, {id: uuidv4() ,text: newTodo, completed: false}];
+            const updatedTodos = [...todos, {id: uuidv4() ,text: newTodo, completed: false, dueDate: newTodoDueDate}];
             setTodos(updatedTodos);
             setNewTodo("");
             localStorage.setItem("todos", JSON.stringify(updatedTodos));
@@ -83,6 +85,12 @@ const TodoList = () => {
                 type="text"
                 placeholder="新しいToDoを入力"
                 className={styles.input} />
+            <input
+                value={newTodoDueDate}
+                onChange={(e) => setNewTodoDueDate(e.target.value)}
+                type="date"
+                className={styles.input}
+                />
             <button onClick={handleAddTodo} className={styles.button}>追加</button>
             <div>
                 <button onClick={() => setFilter("all")}>全て</button>
@@ -104,6 +112,10 @@ const TodoList = () => {
                         ) : (
                             <>
                                 <span style={{textDecoration: todo.completed ? "line-through" : "none"}}>{todo.text}</span>
+                                <span
+                                    style={{
+                                        color: new Date(todo.dueDate) < new Date() ? 'red' : 'black'
+                                }}>{todo.dueDate}</span>
                                 <button onClick={() => handleToggleComplete(todo.id)}>完了</button>
                                 <button onClick={() => handleRemoveTodo(todo.id)}>削除</button>
                                 <button onClick={() => handleEditTodo(todo.id, todo.text)}>編集</button>
