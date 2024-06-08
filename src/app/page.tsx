@@ -6,6 +6,7 @@ import Title from "./title/page";
 import Link from "next/link";
 import Counter from "./counter/page";
 import { TodoProvider } from "./context/TodoContext";
+import UserList from "./components/UserList";
 
 export default function Home() {
   const [name, setName] = useState("");
@@ -39,6 +40,7 @@ export default function Home() {
         <Link href="/todo-list">
           Todoリストへ
         </Link>
+        <UserList />
       </>
     </TodoProvider>
   );
