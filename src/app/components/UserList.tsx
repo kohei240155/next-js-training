@@ -1,18 +1,23 @@
+import React, { useEffect, useState } from "react";
 
-interface User {
+type User = {
     id: number;
     name: string;
     email: string;
-}
-
-import React, { useEffect, useState } from 'react'
+};
 
 const UserList: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [newUser, setNewUser] = useState<{ name: string; email: string }>({ name: '', email: ''});
+    const [editingUser, setEditingUser] = useState<User | null>(null);
 
     useEffect(() => {
-        fetch('http://localhost:8080/users')
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = () => {
+        fetch(`http://localhost:8080/users`)
         .then(response => response.json())
         .then(data => {
             setUsers(data);
@@ -21,8 +26,49 @@ const UserList: React.FC = () => {
         .catch(error => {
             console.error('Error fetching users:', error);
             setLoading(false);
-        });
-    }, []);
+        })
+    };
+
+    const handleAddUser = () => {
+        fetch(`http://localhost:8080/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newUser),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setUsers([...users, data]);
+            setNewUser({name: '', email: ''});
+        })
+        .catch(error => console.error('Error adding user:', error));
+    };
+
+    const handleUpdateUser = (id: number, updatedUser: User) => {
+        fetch(`http://localhost:8080/users/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedUser),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setUsers(users.map(user => (user.id === id ? data : user)));
+        })
+        .catch(error => console.error('Error updating user:', error));
+    };
+
+    const handleDeleteUser = (id: number) => {
+        fetch(`http://localhost:8080/users/${id}`, {
+            method: 'DELETE',
+        })
+        .then(() => {
+            setUsers(users.filter(user => user.id != id));
+        })
+        .catch(error => console.error('Error deleting user:', error));
+    };
 
     if (loading) {
         return <div>Loading...</div>
@@ -35,11 +81,35 @@ const UserList: React.FC = () => {
                 {users.map(user => (
                     <li key={user.id}>
                         {user.name} ({user.email})
+                        <button onClick={() => setEditingUser(user)}>Update</button>
+                        <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
-        </div>
-    )
+            <h3>{editingUser ? "Edit User" : "Add New User"}</h3>
+            <input
+                type="text"
+                placeholder="Name"
+                value={editingUser ? editingUser.name : newUser.name}
+                onChange={(e) => editingUser
+                    ? setEditingUser({ ...editingUser, name: e.target.value })
+                    : setNewUser({ ...newUser, name: e.target.value })
+                }
+             />
+             <input
+                type="text"
+                placeholder="Email"
+                value={editingUser ? editingUser.email : newUser.email}
+                onChange={(e) => editingUser
+                    ? setEditingUser({ ...editingUser, email: e.target.value })
+                    : setNewUser({ ...newUser, email: e.target.value })}
+             />
+             {editingUser ? (
+                <button onClick={() => handleUpdateUser(editingUser.id, editingUser)}>Update User</button>
+             ) : (
+                <button onClick={handleAddUser}>Add User</button>
+             )}
+        </div>) ;
 }
 
-export default UserList
+export default UserList;
